@@ -1,6 +1,10 @@
 import fastapi
+from starlette import status
 from starlette.requests import Request
 from fastapi_chameleon import template
+
+from infrastructure import cookie_auth
+from services import user_service
 
 from viewmodels.account.account_viewmodel import AccountViewModel
 from viewmodels.account.login_viewmodel import LoginViewModel
@@ -27,8 +31,18 @@ def register(request: Request):
 @template()
 async def register(request: Request):
     vm = RegisterViewModel(request)
-    await vm.load
-    return vm.to_dict()
+    await vm.load()
+
+    if vm.error:
+        return vm.to_dict()
+
+    account = user_service.create_account(vm.name, vm.email, vm.password)
+
+    response = fastapi.responses.RedirectResponse(url='/account', status_code=status.HTTP_302_FOUND)
+
+    cookie_auth.set_auth(response, account.id)
+
+    return response
 
 
 @router.get('/account/login')

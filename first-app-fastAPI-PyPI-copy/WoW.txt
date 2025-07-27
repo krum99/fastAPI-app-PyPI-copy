@@ -1,0 +1,16 @@
+How to setup:
+    1. Create venv
+    Execute:
+    "C:\Users\krum2\AppData\Local\Programs\Python\Python310\python.exe" -m venv venv
+    in order to create venv.
+
+    Do not use "C:\msys64\mingw64\bin\python.exe" because it doesn't work good with venv, pip and others.
+    MinGW Python is compiled with GCC.
+
+    2. Activate the venv:
+    Execute 'venv\Scripts\activate' in the project root source.
+
+    3. Install requirements:
+    Execute 'pip install -r requirements.txt'  in the project root source.
+
+
