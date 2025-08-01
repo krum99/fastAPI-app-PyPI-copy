@@ -4,3 +4,5 @@ aiofiles
 python-multipart
 
 git+https://github.com/mikeckennedy/fastapi-chameleon.git
+
+sqlalchemy==2.0.40
