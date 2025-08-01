@@ -1,4 +1,6 @@
 from starlette.requests import Request
+
+from services import user_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -24,3 +26,5 @@ class RegisterViewModel(ViewModelBase):
             self.error = "Email is required."
         elif not self.password or len(self.password) < 5:
             self.error = "Password is required and must be at least five characters."
+        elif user_service.get_user_by_email(self.email):
+            self.error = "This email already exists."
