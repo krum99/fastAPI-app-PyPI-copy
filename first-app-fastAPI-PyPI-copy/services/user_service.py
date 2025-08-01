@@ -5,6 +5,7 @@ from data.user import User
 
 from passlib.handlers.sha2_crypt import sha512_crypt as crypto
 
+
 def user_count() -> int:
     session = db_session.create_session()
 
