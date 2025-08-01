@@ -8,4 +8,5 @@ git+https://github.com/mikeckennedy/fastapi-chameleon.git
 sqlalchemy==2.0.40
 progressbar2
 python-dateutil
+passlib
 
