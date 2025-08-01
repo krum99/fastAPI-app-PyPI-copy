@@ -32,7 +32,16 @@ def create_account(name: str, email: str, password: str) -> User:
 
 
 def login_user(email: str, password: str) -> Optional[User]:
-    if password == 'abc':
-        return User("test_user", email, 'abc')
+    session = db_session.create_session()
 
-    return None
+    try:
+        user = session.query(User).filter(User.email == email).first()
+        if not user:
+            return user
+
+        if not crypto.verify(password, user.hash_password):
+            return None
+
+        return user
+    finally:
+        session.close()
