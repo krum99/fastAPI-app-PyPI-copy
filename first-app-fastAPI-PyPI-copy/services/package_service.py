@@ -44,16 +44,26 @@ def latest_packages(limit: int = 5) -> List:
 
 
 def get_package_by_id(package_name: str) -> Optional[Package]:
-    package = Package(
-        package_name,
-        "Summary",
-        "Details",
-        "https://fastapi.tiangolo.com/",
-        "MIT",
-        "Sebastian Ramirez",
-    )
-    return package
+    session = db_session.create_session()
+
+    try:
+        package = session.query(Package).filter(Package.id == package_name).first()
+        return package
+    finally:
+        session.close()
 
 
 def get_latest_release_for_package(package_name) -> Optional[Release]:
-    return Release("1.2.1", datetime.datetime.now())
+    session = db_session.create_session()
+
+    try:
+        release = (
+            session.query(Release)
+                .filter(Release.package_id == package_name)
+                .order_by(Release.created_date.desc())
+                .first()
+        )
+
+        return release
+    finally:
+        session.close()
