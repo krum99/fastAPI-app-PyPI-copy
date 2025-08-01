@@ -45,3 +45,21 @@ def login_user(email: str, password: str) -> Optional[User]:
         return user
     finally:
         session.close()
+
+
+def get_user_by_id(user_id) -> Optional[User]:
+    session = db_session.create_session()
+
+    try:
+        return session.query(User).filter(User.id == user_id).first()
+    finally:
+        session.close()
+
+
+def get_user_by_email(email: str) -> Optional[User]:
+    session = db_session.create_session()
+
+    try:
+        return session.query(User).filter(User.email == email).first()
+    finally:
+        session.close()
