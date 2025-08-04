@@ -57,10 +57,9 @@ async def get_user_by_id(user_id: int) -> Optional[User]:
         return result.scalar_one_or_none()
 
 
-def get_user_by_email(email: str) -> Optional[User]:
-    session = db_session.create_session()
+async def get_user_by_email(email: str) -> Optional[User]:
+    async with db_session.create_async_session() as session:
+        query = select(User).filter(User.email == email)
+        result = await session.execute(query)
 
-    try:
-        return session.query(User).filter(User.email == email).first()
-    finally:
-        session.close()
+        return result.scalar_one_or_none()
