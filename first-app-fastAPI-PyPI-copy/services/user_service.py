@@ -16,21 +16,24 @@ async def user_count() -> int:
         return result.scalar()
 
 
-def create_account(name: str, email: str, password: str) -> User:
-    session = db_session.create_session()
+async def create_account(name: Optional[str], email: Optional[str], password: Optional[str]) -> User:
+    if not password:
+        raise Exception('password is required')
+    if not email:
+        raise Exception('email is required')
+    if not name:
+        raise Exception('name is required')
 
-    try:
-        user = User()
-        user.email = email
-        user.name = name
-        user.hash_password = crypto.hash(password, rounds=172_434)
+    user = User()
+    user.email = email
+    user.name = name
+    user.hash_password = crypto.hash(password, rounds=172_434)
 
+    async with db_session.create_async_session() as session:
         session.add(user)
-        session.commit()
+        await session.commit()
 
-        return user
-    finally:
-        session.close()
+    return user
 
 
 def login_user(email: str, password: str) -> Optional[User]:

@@ -37,7 +37,7 @@ async def register(request: Request):
     if vm.error:
         return vm.to_dict()
 
-    account = user_service.create_account(vm.name, vm.email, vm.password)
+    account = await user_service.create_account(vm.name, vm.email, vm.password)
 
     response = fastapi.responses.RedirectResponse(url='/account', status_code=status.HTTP_302_FOUND)
 
