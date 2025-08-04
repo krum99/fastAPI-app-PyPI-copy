@@ -1,3 +1,5 @@
+import asyncio
+
 import fastapi
 from starlette import status
 from starlette.requests import Request
@@ -64,6 +66,8 @@ async def login_post(request: Request):
     user = await user_service.login_user(vm.email, vm.password)
 
     if not user:
+        # Security tactic
+        await asyncio.sleep(4) # Wrong login data will make the user to wait
         vm.error = "The account does not exist or the password is wrong."
         return vm.to_dict()
 
