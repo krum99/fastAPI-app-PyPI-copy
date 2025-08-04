@@ -10,3 +10,6 @@ progressbar2
 python-dateutil
 passlib
 
+starlette==0.46.1
+
+aiosqlite==0.21.0

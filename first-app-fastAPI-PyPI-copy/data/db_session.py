@@ -25,10 +25,11 @@ def global_init(db_file: str):
     folder.mkdir(parents=True, exist_ok=True)
 
     conn_str = 'sqlite:///' + db_file.strip()
+    async_conn_str = 'sqlite+aiosqlite:///' + db_file.strip()
     print('Connecting to DB with {}'.format(conn_str))
 
     engine = sa.create_engine(conn_str, echo=False, connect_args={'check_same_thread': False})
-    __async_engine = create_async_engine(conn_str, echo=False, connect_args={'check_same_thread': False})
+    __async_engine = create_async_engine(async_conn_str, echo=False, connect_args={'check_same_thread': False})
     __factory = orm.sessionmaker(bind=engine)
 
     # noinspection PyUnresolvedReferences

@@ -10,8 +10,9 @@ router = fastapi.APIRouter()
 
 @router.get('/')
 @template()
-def index(request: Request = None):
+async def index(request: Request = None):
     vm = IndexViewModel(request)
+    await vm.load()
     return vm.to_dict()
 
 
