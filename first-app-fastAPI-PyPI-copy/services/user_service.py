@@ -49,13 +49,12 @@ def login_user(email: str, password: str) -> Optional[User]:
         session.close()
 
 
-def get_user_by_id(user_id) -> Optional[User]:
-    session = db_session.create_session()
+async def get_user_by_id(user_id: int) -> Optional[User]:
+    async with db_session.create_async_session() as session:
+        query = select(User).filter(User.id == user_id)
+        result = await session.execute(query)
 
-    try:
-        return session.query(User).filter(User.id == user_id).first()
-    finally:
-        session.close()
+        return result.scalar_one_or_none()
 
 
 def get_user_by_email(email: str) -> Optional[User]:
