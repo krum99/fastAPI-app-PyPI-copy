@@ -36,20 +36,22 @@ async def create_account(name: Optional[str], email: Optional[str], password: Op
     return user
 
 
-def login_user(email: str, password: str) -> Optional[User]:
-    session = db_session.create_session()
+async def login_user(email: str, password: str) -> Optional[User]:
+    async with db_session.create_async_session() as session:
+        query = select(User).filter(User.email == email)
+        results = await session.execute(query)
 
-    try:
-        user = session.query(User).filter(User.email == email).first()
+        user = results.scalar_one_or_none()
         if not user:
             return user
 
-        if not crypto.verify(password, user.hash_password):
+        try:
+            if not crypto.verify(password, user.hash_password):
+                return None
+        except ValueError:
             return None
 
         return user
-    finally:
-        session.close()
 
 
 async def get_user_by_id(user_id: int) -> Optional[User]:

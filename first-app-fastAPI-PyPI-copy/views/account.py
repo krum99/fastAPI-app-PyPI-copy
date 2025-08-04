@@ -61,7 +61,7 @@ async def login_post(request: Request):
     if vm.error:
         return vm.to_dict()
 
-    user = user_service.login_user(vm.email, vm.password)
+    user = await user_service.login_user(vm.email, vm.password)
 
     if not user:
         vm.error = "The account does not exist or the password is wrong."
